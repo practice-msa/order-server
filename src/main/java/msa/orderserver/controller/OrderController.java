@@ -4,6 +4,8 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import msa.orderserver.domain.OrderEntity;
 import msa.orderserver.dto.OrderDto;
+import msa.orderserver.messagequeue.KafkaProducer;
+import msa.orderserver.messagequeue.OrderProducer;
 import msa.orderserver.service.OrderService;
 import msa.orderserver.vo.RequestOrder;
 import msa.orderserver.vo.ResponseOrder;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/order-service")
@@ -21,6 +24,8 @@ import java.util.List;
 public class OrderController {
     private final Environment env;
     private final OrderService orderService;
+    private final KafkaProducer kafkaProducer;
+    private final OrderProducer orderProducer;
 
     @GetMapping("/health_check")
     public String status(){
@@ -31,13 +36,21 @@ public class OrderController {
     public ResponseEntity<ResponseOrder> createOrder(@PathVariable("userId") String userId,
                                                      @RequestBody RequestOrder order){
 
-        OrderDto orderDto = orderService.createOrder(order.toDto(userId));
+//        OrderDto orderDto = orderService.createOrder(order.toDto(userId));
+
+        OrderDto orderDto = order.toDto(userId);
+        orderDto.setOrderId(UUID.randomUUID().toString());
+        orderDto.setTotalPrice(orderDto.getQty()*orderDto.getUnitPrice());
+
+        // kafka
+        kafkaProducer.send("example-order-topic",orderDto);
+        orderProducer.send("orderrrr",orderDto);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseOrder.from(orderDto));
     }
 
     @GetMapping("/{userId}/orders")
-    public ResponseEntity<List<ResponseOrder>> getOrder(@PathVariable("userId") String userId,
-                                                          @RequestBody RequestOrder order) {
+    public ResponseEntity<List<ResponseOrder>> getOrder(@PathVariable("userId") String userId) {
         Iterable<OrderEntity> orderList = orderService.getOrdersByUserId(userId);
         List<ResponseOrder> result = new ArrayList<>();
 

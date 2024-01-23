@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name="orders")
+@Table(name="orderrrr")
 @NoArgsConstructor
 public class OrderEntity implements Serializable {
     @Id
@@ -37,8 +37,7 @@ public class OrderEntity implements Serializable {
     @Column(nullable = false, unique = true)
     private String orderId;
 
-    @Column(nullable = false, updatable = false, insertable = false)
-    @ColumnDefault(value = "CURRENT_TIMESTAMP")
+    @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createdAt;
 
     @Builder
