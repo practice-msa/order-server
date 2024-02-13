@@ -3,10 +3,8 @@ package msa.orderserver.vo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
-import msa.orderserver.domain.OrderEntity;
+import msa.orderserver.domain.Order;
 import msa.orderserver.dto.OrderDto;
-
-import java.util.Date;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -16,7 +14,6 @@ public class ResponseOrder {
     private Integer qty;
     private Integer unitPrice;
     private Integer totalPrice;
-//    private Date createdAt;
 
     private String orderId;
 
@@ -29,13 +26,13 @@ public class ResponseOrder {
                 .build();
     }
 
-    public static ResponseOrder fromEntity(OrderEntity orderEntity) {
+    public static ResponseOrder fromEntity(Order order) {
         return ResponseOrder.builder()
-                .productId(orderEntity.getProductId())
-                .qty(orderEntity.getQty())
-                .unitPrice(orderEntity.getUnitPrice())
-                .totalPrice(orderEntity.getTotalPrice())
-                .orderId(orderEntity.getOrderId())
+                .productId(order.getProductId())
+                .qty(order.getQty())
+                .unitPrice(order.getUnitPrice())
+                .totalPrice(order.getTotalPrice())
+                .orderId(order.getOrderId())
                 .build();
     }
 }

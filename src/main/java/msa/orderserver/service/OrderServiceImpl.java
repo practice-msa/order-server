@@ -3,7 +3,7 @@ package msa.orderserver.service;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import msa.orderserver.domain.OrderEntity;
+import msa.orderserver.domain.Order;
 import msa.orderserver.dto.OrderDto;
 import msa.orderserver.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -26,13 +26,13 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto createOrder(OrderDto orderDetails) {
         orderDetails.setOrderId(UUID.randomUUID().toString());
         orderDetails.setTotalPrice(orderDetails.getUnitPrice() * orderDetails.getQty());
-        OrderEntity orderEntity = orderDetails.toEntity(orderDetails);
-        orderRepository.save(orderEntity);
-        return OrderDto.from(orderEntity);
+        Order order = orderDetails.toEntity(orderDetails);
+        orderRepository.save(order);
+        return OrderDto.from(order);
     }
 
     @Override
-    public Iterable<OrderEntity> getOrdersByUserId(String userId) {
+    public Iterable<Order> getOrdersByUserId(String userId) {
 
         return orderRepository.findByUserId(userId);
     }

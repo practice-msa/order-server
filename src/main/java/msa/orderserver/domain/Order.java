@@ -3,8 +3,6 @@ package msa.orderserver.domain;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,9 +10,9 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name="orderrrr")
+@Table(name="orders")
 @NoArgsConstructor
-public class OrderEntity implements Serializable {
+public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,11 +35,12 @@ public class OrderEntity implements Serializable {
     @Column(nullable = false, unique = true)
     private String orderId;
 
-    @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     @Builder
-    public OrderEntity(String productId, Integer qty, Integer unitPrice, Integer totalPrice, String userId, String orderId) {
+    public Order(String productId, Integer qty, Integer unitPrice, Integer totalPrice, String userId, String orderId) {
         this.productId = productId;
         this.qty = qty;
         this.unitPrice = unitPrice;
