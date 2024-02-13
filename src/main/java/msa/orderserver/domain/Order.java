@@ -35,6 +35,10 @@ public class Order implements Serializable {
     @Column(nullable = false, unique = true)
     private String orderId;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="delivery_id")
+    private Delivery delivery;
+
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
