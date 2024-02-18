@@ -2,10 +2,13 @@ package msa.orderserver.service;
 
 
 import msa.orderserver.domain.Order;
-import msa.orderserver.dto.OrderDto;
+import msa.orderserver.vo.order.RequestOrder;
+import msa.orderserver.vo.order.ResponseOrder;
+
+import java.util.List;
 
 public interface OrderService {
-    OrderDto createOrder(OrderDto orderDetails);
-    OrderDto getOrderByOrderId(String orderId);
-    Iterable<Order> getOrdersByUserId(String userId);
+    void createOrder(RequestOrder orderDetails, String userId);
+    void getOrderByOrderId(String orderId);
+    List<ResponseOrder> getOrdersByUserId(String userId);
 }

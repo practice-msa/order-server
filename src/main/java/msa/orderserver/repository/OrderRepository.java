@@ -3,7 +3,9 @@ package msa.orderserver.repository;
 import msa.orderserver.domain.Order;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
+
 public interface OrderRepository extends CrudRepository<Order,Long> {
     Order findByOrderId(String orderId);
-    Iterable<Order> findByUserId(String userId);
+    List<Order> findByUserId(String userId);
 }
