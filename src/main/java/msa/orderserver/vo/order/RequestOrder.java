@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class RequestOrder {
-    private final String productId;
+    private final Long productId;
     private final Integer qty;
     private final Integer unitPrice;
     private final String name;

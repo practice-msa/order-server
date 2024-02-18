@@ -2,8 +2,9 @@ package msa.orderserver.controller;
 
 import lombok.RequiredArgsConstructor;
 import msa.orderserver.domain.Order;
-//import msa.orderserver.messagequeue.KafkaProducer;
+import msa.orderserver.messagequeue.KafkaProducer;
 //import msa.orderserver.messagequeue.OrderProducer;
+import msa.orderserver.dto.OrderToCatalogDto;
 import msa.orderserver.service.OrderService;
 import msa.orderserver.vo.order.RequestOrder;
 import msa.orderserver.vo.order.ResponseOrder;
@@ -22,7 +23,7 @@ import java.util.UUID;
 public class OrderController {
     private final Environment env;
     private final OrderService orderService;
-//    private final KafkaProducer kafkaProducer;
+    private final KafkaProducer kafkaProducer;
 //    private final OrderProducer orderProducer;
 
     @GetMapping("/health_check")
@@ -39,7 +40,10 @@ public class OrderController {
 //        orderDto.setTotalPrice(orderDto.getQty()*orderDto.getUnitPrice());
 
         // kafka
-        // kafkaProducer.send("example-order-topic",orderDto);
+        // 이건 catalog 서버로의 전달 토픽
+
+        kafkaProducer.send("example-order-topic", OrderToCatalogDto.from(order));
+        // 이건 order db로의 전달 토픽
         // orderProducer.send("orderrrr",orderDto);
 
         orderService.createOrder(order,userId);

@@ -1,5 +1,6 @@
 package msa.orderserver.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,13 +13,15 @@ import java.util.Date;
 @Entity
 @Table(name="orders")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String productId;
+    private Long productId;
 
     @Column(nullable = false)
     private Integer qty;
@@ -35,7 +38,7 @@ public class Order implements Serializable {
     @Column(nullable = false, unique = true)
     private String orderId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name="delivery_id")
     private Delivery delivery;
 
@@ -43,13 +46,5 @@ public class Order implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @Builder
-    public Order(String productId, Integer qty, Integer unitPrice, Integer totalPrice, String userId, String orderId) {
-        this.productId = productId;
-        this.qty = qty;
-        this.unitPrice = unitPrice;
-        this.totalPrice = totalPrice;
-        this.userId = userId;
-        this.orderId = orderId;
-    }
+
 }

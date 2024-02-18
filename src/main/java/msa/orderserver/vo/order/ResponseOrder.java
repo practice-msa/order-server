@@ -9,7 +9,7 @@ import msa.orderserver.domain.Order;
 @Data
 @Builder
 public class ResponseOrder {
-    private final String productId;
+    private final Long productId;
     private final Integer qty;
     private final Integer unitPrice;
     private final Integer totalPrice;
