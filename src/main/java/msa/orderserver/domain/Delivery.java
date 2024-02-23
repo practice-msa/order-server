@@ -1,7 +1,10 @@
 package msa.orderserver.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import msa.orderserver.vo.delivery.RequestUpdateDelivery;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,6 +12,8 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name="delivery")
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Delivery {
     @Id
@@ -42,4 +47,12 @@ public class Delivery {
     // 주문 아이디
     @OneToOne(fetch = FetchType.LAZY,mappedBy = "delivery")
     private Order order;
+
+    public void updateFromDTO(RequestUpdateDelivery dto) {
+        this.deliveryStatus = dto.getDeliveryStatus();
+        this.deliveryStartDate = dto.getDeliveryStartDate();
+        this.deliveryCompleteDate = dto.getDeliveryCompleteDate();
+        this.deliveryCompany = dto.getDeliveryCompany();
+        this.deliveryCode = dto.getDeliveryCode();
+    }
 }
