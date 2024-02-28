@@ -2,12 +2,13 @@ package msa.orderserver.controller;
 
 import lombok.RequiredArgsConstructor;
 import msa.orderserver.domain.Order;
-import msa.orderserver.messagequeue.KafkaProducer;
+//import msa.orderserver.messagequeue.KafkaProducer;
 //import msa.orderserver.messagequeue.OrderProducer;
 import msa.orderserver.dto.OrderToCatalogDto;
 import msa.orderserver.service.OrderService;
 import msa.orderserver.vo.order.RequestOrder;
 import msa.orderserver.vo.order.ResponseOrder;
+import msa.orderserver.vo.order.ResponseUpdateOrder;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ import java.util.UUID;
 public class OrderController {
     private final Environment env;
     private final OrderService orderService;
-    private final KafkaProducer kafkaProducer;
+//    private final KafkaProducer kafkaProducer;
 //    private final OrderProducer orderProducer;
 
     @GetMapping("/health_check")
@@ -42,7 +43,7 @@ public class OrderController {
         // kafka
         // 이건 catalog 서버로의 전달 토픽
 
-        kafkaProducer.send("example-order-topic", OrderToCatalogDto.from(order));
+//        kafkaProducer.send("example-order-topic", OrderToCatalogDto.from(order));
         // 이건 order db로의 전달 토픽
         // orderProducer.send("orderrrr",orderDto);
 
@@ -56,4 +57,14 @@ public class OrderController {
 
         return ResponseEntity.status(HttpStatus.OK).body(orderList);
     }
+
+    // 주문 취소
+    @PutMapping("/{orderId}/orders")
+    public ResponseEntity<String> updateOrder(@PathVariable("orderId") String orderId){
+        ResponseUpdateOrder responseUpdateOrder = orderService.updateOrder(orderId);
+        if(responseUpdateOrder.getCheck()) return ResponseEntity.status(HttpStatus.OK).body("취소하였습니다.");
+        else return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("취소 실패하였습니다.");
+    }
+
+
 }
