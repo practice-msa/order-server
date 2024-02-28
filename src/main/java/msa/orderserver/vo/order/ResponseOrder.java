@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import msa.orderserver.domain.DeliveryStatus;
 import msa.orderserver.domain.Order;
+import msa.orderserver.domain.OrderStatus;
 
 @Data
 @Builder
@@ -14,6 +15,7 @@ public class ResponseOrder {
     private final Integer unitPrice;
     private final Integer totalPrice;
     private final String orderId;
+    private final OrderStatus orderStatus;
     private final DeliveryStatus deliveryStatus;
 
     public static ResponseOrder from(Order order) {
@@ -23,6 +25,7 @@ public class ResponseOrder {
                 .unitPrice(order.getUnitPrice())
                 .totalPrice(order.getTotalPrice())
                 .orderId(order.getOrderId())
+                .orderStatus(order.getOrderStatus())
                 .deliveryStatus(order.getDelivery().getDeliveryStatus())
                 .build();
     }

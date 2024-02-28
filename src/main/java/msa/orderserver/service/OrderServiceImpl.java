@@ -3,10 +3,7 @@ package msa.orderserver.service;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import msa.orderserver.domain.Delivery;
-import msa.orderserver.domain.DeliveryStatus;
-import msa.orderserver.domain.DeliveryUser;
-import msa.orderserver.domain.Order;
+import msa.orderserver.domain.*;
 import msa.orderserver.repository.OrderRepository;
 import msa.orderserver.vo.order.RequestOrder;
 import msa.orderserver.vo.order.ResponseOrder;
@@ -38,6 +35,7 @@ public class OrderServiceImpl implements OrderService {
                 .deliveryUser(new DeliveryUser(requestOrder.getName(),requestOrder.getAddress(),requestOrder.getPhoneNumber()))
                             .build();
         Order order = requestOrder.toEntity(userId,delivery);
+        order.setOrderStatus(OrderStatus.PROCESSING);
         orderRepository.save(order);
     }
 

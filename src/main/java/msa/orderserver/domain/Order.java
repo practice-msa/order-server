@@ -21,6 +21,9 @@ public class Order implements Serializable {
     private Long id;
 
     @Column(nullable = false)
+    private OrderStatus orderStatus;
+
+    @Column(nullable = false)
     private Long productId;
 
     @Column(nullable = false)
