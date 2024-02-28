@@ -61,7 +61,7 @@ public class OrderController {
     // 주문 취소
     @PutMapping("/{orderId}/orders")
     public ResponseEntity<String> updateOrder(@PathVariable("orderId") String orderId){
-        ResponseUpdateOrder responseUpdateOrder = orderService.updateOrder(orderId);
+        ResponseUpdateOrder responseUpdateOrder = orderService.cancelOrder(orderId);
         if(responseUpdateOrder.getCheck()) return ResponseEntity.status(HttpStatus.OK).body("취소하였습니다.");
         else return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("취소 실패하였습니다.");
     }

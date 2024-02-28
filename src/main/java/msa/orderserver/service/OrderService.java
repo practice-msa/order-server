@@ -14,7 +14,8 @@ public interface OrderService {
     List<ResponseOrder> getOrdersByUserId(String userId);
 
     // 주문 취소 -> 현재 배송 상태에 따라서 주문 취소 가능한지 불가능한지 판별해야함
-    ResponseUpdateOrder updateOrder(String orderId);
+    ResponseUpdateOrder cancelOrder(String orderId);
 
     // 해당 주문에서 배송지 변경
+    void update
 }

@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseUpdateOrder updateOrder(String orderId) {
+    public ResponseUpdateOrder cancelOrder(String orderId) {
         Optional<Order> optionalOrder = orderRepository.findByOrderId(orderId);
         ResponseUpdateOrder responseUpdateOrder = new ResponseUpdateOrder(false);
         optionalOrder.ifPresentOrElse(order -> {
