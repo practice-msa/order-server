@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import msa.orderserver.domain.Delivery;
 import msa.orderserver.domain.Order;
+import msa.orderserver.domain.OrderStatus;
 
 import java.util.UUID;
 
@@ -29,6 +30,7 @@ public class RequestOrder {
                 .userId(userId)
                 .orderId(UUID.randomUUID().toString())
                 .delivery(delivery)
+                .orderStatus(OrderStatus.PROCESSING)
                 .build();
     }
 

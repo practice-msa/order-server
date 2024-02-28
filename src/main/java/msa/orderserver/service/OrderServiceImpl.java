@@ -6,8 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import msa.orderserver.domain.*;
 import msa.orderserver.repository.OrderRepository;
 import msa.orderserver.vo.order.RequestOrder;
+import msa.orderserver.vo.order.RequestUpdateOrder;
 import msa.orderserver.vo.order.ResponseOrder;
 import msa.orderserver.vo.order.ResponseUpdateOrder;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void createOrder(RequestOrder requestOrder, String userId) {
 
         // 여기에 추가 배송 정보도 추가되었음
@@ -43,13 +46,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public ResponseUpdateOrder cancelOrder(String orderId) {
         Optional<Order> optionalOrder = orderRepository.findByOrderId(orderId);
         ResponseUpdateOrder responseUpdateOrder = new ResponseUpdateOrder(false);
         optionalOrder.ifPresentOrElse(order -> {
-            if(order.getOrderStatus() == OrderStatus.PROCESSING){
+            if(order.getOrderStatus().getValue() == 0){
                 // 여기서 카프카로 해당 제품의 수량을 다시 올려야함.
                 order.setOrderStatus(OrderStatus.CANCELLED);
+                log.info(String.valueOf(order.getOrderStatus()));
                 responseUpdateOrder.setCheck(true);
 
             }else{
@@ -58,6 +63,16 @@ public class OrderServiceImpl implements OrderService {
         },()->{throw new NoSuchElementException("해당 주문 정보는 없습니다.");}
         );
         return responseUpdateOrder;
+    }
+
+    @Override
+    @Transactional
+    public Boolean updateOrder(String orderId, RequestUpdateOrder requestUpdateOrder) {
+        Optional<Order> optionalOrder = orderRepository.findByOrderId(orderId);
+        optionalOrder.ifPresentOrElse(order -> order.update(requestUpdateOrder),
+                ()->{throw new NoSuchElementException("해당 주문 정보는 없습니다.");}
+                );
+        return true;
     }
 
     @Override

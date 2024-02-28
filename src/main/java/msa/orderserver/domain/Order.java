@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import msa.orderserver.vo.order.RequestUpdateOrder;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -49,5 +50,11 @@ public class Order implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
+    public void update(RequestUpdateOrder requestUpdateOrder){
+        this.setQty(requestUpdateOrder.getQty());
+        this.getDelivery().getDeliveryUser().setName(requestUpdateOrder.getName());
+        this.getDelivery().getDeliveryUser().setAddress(requestUpdateOrder.getAddress());
+        this.getDelivery().getDeliveryUser().setPhoneNumber(requestUpdateOrder.getPhoneNumber());
+    }
 
 }

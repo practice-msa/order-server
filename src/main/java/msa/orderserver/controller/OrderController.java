@@ -7,6 +7,7 @@ import msa.orderserver.domain.Order;
 import msa.orderserver.dto.OrderToCatalogDto;
 import msa.orderserver.service.OrderService;
 import msa.orderserver.vo.order.RequestOrder;
+import msa.orderserver.vo.order.RequestUpdateOrder;
 import msa.orderserver.vo.order.ResponseOrder;
 import msa.orderserver.vo.order.ResponseUpdateOrder;
 import org.springframework.core.env.Environment;
@@ -59,12 +60,18 @@ public class OrderController {
     }
 
     // 주문 취소
-    @PutMapping("/{orderId}/orders")
-    public ResponseEntity<String> updateOrder(@PathVariable("orderId") String orderId){
+    @PutMapping("/{orderId}/cancel/order")
+    public ResponseEntity<String> cancelOrder(@PathVariable("orderId") String orderId){
         ResponseUpdateOrder responseUpdateOrder = orderService.cancelOrder(orderId);
         if(responseUpdateOrder.getCheck()) return ResponseEntity.status(HttpStatus.OK).body("취소하였습니다.");
         else return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("취소 실패하였습니다.");
     }
 
+    @PutMapping("{orderId}/order")
+    public ResponseEntity<String> updateOrder(@PathVariable("orderId") String orderId,
+                                              @RequestBody RequestUpdateOrder requestUpdateOrder){
+        orderService.updateOrder(orderId,requestUpdateOrder);
+        return ResponseEntity.status(HttpStatus.OK).body("변경 완료");
+    }
 
 }
