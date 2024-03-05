@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,9 +34,9 @@ public class OrderController {
         return String.format("order service port %s",env.getProperty("local.server.port"));
     }
 
-    @PostMapping("/{userId}/orders")
+    @PostMapping("/{userId}/order")
     public ResponseEntity<String> createOrder(@PathVariable("userId") String userId,
-                                                     @RequestBody RequestOrder order){
+                                                     @RequestBody @Valid RequestOrder order){
 
 //        OrderDto orderDto = order.toDto(userId);
 //        orderDto.setOrderId(UUID.randomUUID().toString());
@@ -69,7 +70,7 @@ public class OrderController {
 
     @PutMapping("{orderId}/order")
     public ResponseEntity<String> updateOrder(@PathVariable("orderId") String orderId,
-                                              @RequestBody RequestUpdateOrder requestUpdateOrder){
+                                              @RequestBody @Valid RequestUpdateOrder requestUpdateOrder){
         orderService.updateOrder(orderId,requestUpdateOrder);
         return ResponseEntity.status(HttpStatus.OK).body("변경 완료");
     }

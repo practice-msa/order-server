@@ -4,21 +4,31 @@ package msa.orderserver.vo.order;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import msa.orderserver.customannotation.NickName;
+import msa.orderserver.customannotation.NonNegativeSize;
 import msa.orderserver.domain.Delivery;
 import msa.orderserver.domain.Order;
 import msa.orderserver.domain.OrderStatus;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @Builder
 public class RequestOrder {
+    @NotNull
     private final Long productId;
+    @NonNegativeSize
     private final Integer qty;
+    @NonNegativeSize
     private final Integer unitPrice;
+    @NickName
     private final String name;
+    @NotNull
     private final String address;
+    @Pattern(regexp = "^01[0-9]-\\d{4}-\\d{4}$", message = "Invalid phone number format")
     private final String phoneNumber;
 
     public Order toEntity(String userId, Delivery delivery){

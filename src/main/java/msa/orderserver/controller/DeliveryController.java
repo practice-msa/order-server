@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.ws.rs.PUT;
 
 @RestController
@@ -23,7 +24,7 @@ public class DeliveryController {
     }
 
     @PutMapping("/{deliveryId}")
-    ResponseEntity<String> updateDelivery(@RequestBody RequestUpdateDelivery requestUpdateDelivery,
+    ResponseEntity<String> updateDelivery(@RequestBody @Valid RequestUpdateDelivery requestUpdateDelivery,
                                           @PathVariable("deliveryId") Long id){
         deliveryService.updateDeliveryStatus(requestUpdateDelivery,id);
         return ResponseEntity.status(HttpStatus.OK).body("성공적 처리");
