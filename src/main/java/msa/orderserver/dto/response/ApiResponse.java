@@ -1,15 +1,18 @@
 package msa.orderserver.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.http.HttpStatus;
 
 public class ApiResponse<T>{
     private Boolean isSuccess;
     private T response;
+    private HttpStatus code;
     private ErrorResponse errorResponse;
 
-    public ApiResponse(Boolean isSuccess, T response, ErrorResponse errorResponse) {
+    public ApiResponse(Boolean isSuccess, T response, HttpStatus code, ErrorResponse errorResponse) {
         this.isSuccess = isSuccess;
         this.response = response;
+        this.code = code;
         this.errorResponse = errorResponse;
     }
 
