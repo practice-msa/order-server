@@ -5,6 +5,8 @@ import msa.orderserver.domain.Order;
 //import msa.orderserver.messagequeue.KafkaProducer;
 //import msa.orderserver.messagequeue.OrderProducer;
 import msa.orderserver.dto.OrderToCatalogDto;
+import msa.orderserver.dto.response.ApiResponse;
+import msa.orderserver.dto.response.ErrorResponse;
 import msa.orderserver.service.OrderService;
 import msa.orderserver.vo.order.RequestOrder;
 import msa.orderserver.vo.order.RequestUpdateOrder;
@@ -35,8 +37,8 @@ public class OrderController {
     }
 
     @PostMapping("/{userId}/order")
-    public ResponseEntity<String> createOrder(@PathVariable("userId") String userId,
-                                                     @RequestBody @Valid RequestOrder order){
+    public ApiResponse<String> createOrder(@PathVariable("userId") String userId,
+                                   @RequestBody @Valid RequestOrder order){
 
 //        OrderDto orderDto = order.toDto(userId);
 //        orderDto.setOrderId(UUID.randomUUID().toString());
@@ -50,29 +52,30 @@ public class OrderController {
         // orderProducer.send("orderrrr",orderDto);
 
         orderService.createOrder(order,userId);
-        return ResponseEntity.status(HttpStatus.CREATED).body("good");
+        return new ApiResponse<>(true, "주문하였습니다.", HttpStatus.CREATED,null);
+
     }
 
     @GetMapping("/{userId}/orders")
-    public ResponseEntity<List<ResponseOrder>> getOrder(@PathVariable("userId") String userId) {
+    public ApiResponse<List<ResponseOrder>> getOrder(@PathVariable("userId") String userId) {
         List<ResponseOrder> orderList = orderService.getOrdersByUserId(userId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(orderList);
+        return new ApiResponse<>(true,orderList,HttpStatus.OK,null);
     }
 
     // 주문 취소
     @PutMapping("/{orderId}/cancel/order")
-    public ResponseEntity<String> cancelOrder(@PathVariable("orderId") String orderId){
+    public ApiResponse<String> cancelOrder(@PathVariable("orderId") String orderId){
         ResponseUpdateOrder responseUpdateOrder = orderService.cancelOrder(orderId);
-        if(responseUpdateOrder.getCheck()) return ResponseEntity.status(HttpStatus.OK).body("취소하였습니다.");
-        else return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("취소 실패하였습니다.");
+        if(responseUpdateOrder.getCheck()) return new ApiResponse<>(true,"취소하였습니다.",HttpStatus.OK,null);
+        else  return new ApiResponse<>(false,null,HttpStatus.OK,new ErrorResponse("취소 실패하였습니다."));
     }
 
     @PutMapping("{orderId}/order")
-    public ResponseEntity<String> updateOrder(@PathVariable("orderId") String orderId,
+    public ApiResponse<String> updateOrder(@PathVariable("orderId") String orderId,
                                               @RequestBody @Valid RequestUpdateOrder requestUpdateOrder){
         orderService.updateOrder(orderId,requestUpdateOrder);
-        return ResponseEntity.status(HttpStatus.OK).body("변경 완료");
+        return new ApiResponse<>(true,"변경하였습니다.",HttpStatus.OK,null);
     }
 
 }

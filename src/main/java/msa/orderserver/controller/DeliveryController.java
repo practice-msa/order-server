@@ -1,6 +1,7 @@
 package msa.orderserver.controller;
 
 import lombok.RequiredArgsConstructor;
+import msa.orderserver.dto.response.ApiResponse;
 import msa.orderserver.service.DeliveryService;
 import msa.orderserver.vo.delivery.RequestUpdateDelivery;
 import msa.orderserver.vo.delivery.ResponseDelivery;
@@ -18,15 +19,16 @@ public class DeliveryController {
     private final DeliveryService deliveryService;
 
     @GetMapping("/{deliveryId}")
-    ResponseEntity<ResponseDelivery> getDelivery(@PathVariable("deliveryId") Long id){
+    ApiResponse<ResponseDelivery> getDelivery(@PathVariable("deliveryId") Long id){
         ResponseDelivery responseDelivery = deliveryService.getDeliveryStatus(id);
-        return ResponseEntity.status(HttpStatus.FOUND).body(responseDelivery);
+
+        return new ApiResponse<ResponseDelivery>(true,responseDelivery, HttpStatus.FOUND,null);
     }
 
     @PutMapping("/{deliveryId}")
-    ResponseEntity<String> updateDelivery(@RequestBody @Valid RequestUpdateDelivery requestUpdateDelivery,
+    ApiResponse<String> updateDelivery(@RequestBody @Valid RequestUpdateDelivery requestUpdateDelivery,
                                           @PathVariable("deliveryId") Long id){
         deliveryService.updateDeliveryStatus(requestUpdateDelivery,id);
-        return ResponseEntity.status(HttpStatus.OK).body("성공적 처리");
+        return new ApiResponse<>(true,"성공적으로 처리하였습니다.",HttpStatus.OK,null);
     }
 }
